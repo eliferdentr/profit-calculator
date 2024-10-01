@@ -3,40 +3,57 @@ package main
 import "fmt"
 
 func main() {
-	var revenue, expenses, taxRate float64
-
-	fmt.Print("Please enter revenue: ")
-	fmt.Scan(&revenue)
-	fmt.Print("\nPlease enter expenses: ")
-	fmt.Scan(&expenses)
-	fmt.Print("\nPlease enter tax rate (in decimal): ")
-	fmt.Scan(&taxRate)
+	revenue := takeUserInput("Please enter revenue: ")
+	expenses := takeUserInput("Please enter expenses: ")
+	taxRate :=  takeUserInput("Please enter tax rate (in decimal): ")
 
 	ebt := calculateEbt(revenue, expenses)
 	eat := calculateEat(revenue, expenses, taxRate)
 
-	fmt.Printf("Earning before taxes: %.2f\n", ebt)
-	fmt.Printf("\nEarning after taxes: %.2f\n ", eat)
+	// eat, ebt := calculateEatEbtRatio(revenue, expenses, taxRate)
+
+	formattedEbt := fmt.Sprintf("Earning before taxes: %.2f\n", ebt)
+	formattedEat := fmt.Sprintf("Earning after taxes: %.2f\n ", eat)
+	fmt.Print(formattedEbt, formattedEat)
 
 	ratio := calculateRatio(ebt, eat)
+
 	if ratio != -1 {
-		fmt.Print("\nRatio: ", calculateRatio(ebt, eat))
+		fmt.Printf("\nRatio: %.2f\n", ratio)
 	} else {
-		fmt.Print("ratio can't be calculated because the profit is 0")
+		fmt.Printf("ratio can't be calculated because the profit is 0")
 	}
 
 }
 
-func calculateEbt(revenue float64, expenses float64) float64 {
+func calculateEbt(revenue, expenses float64) float64 {
 	return revenue - expenses
 }
 
-func calculateEat(revenue float64, expenses float64, taxRate float64) float64 {
-	var netIncome = calculateEbt(revenue, expenses)
-	var tax = netIncome * taxRate
+func calculateEat(revenue, expenses, taxRate float64) float64 {
+	netIncome := calculateEbt(revenue, expenses)
+	tax := netIncome * taxRate
 	return netIncome - tax
 }
 
-func calculateRatio(ebt float64, profit float64) float64 {
+func calculateRatio(ebt, profit float64) float64 {
 	return ebt / profit
 }
+
+func takeUserInput (outputText string) (inputValue float64) {
+	fmt.Println(outputText)
+	fmt.Scan(&inputValue)
+	return
+}
+
+// func calculateEatEbtRatio (revenue, expenses, taxRate float64) (float64, float64){
+// 	ebt := revenue - expenses
+// 	eat := ebt - ebt * taxRate
+// 	return ebt, eat
+// }
+
+// func calculateEatEbtRatio (revenue, expenses, taxRate float64) (ebt float64, eat float64){
+// 	ebt = revenue - expenses
+// 	eat = ebt - ebt * taxRate
+// 	return ebt, eat
+// }
